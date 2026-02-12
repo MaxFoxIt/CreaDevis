@@ -20,6 +20,7 @@ $dateValidite = $_POST['date_validite'] ?? '';
 $tva          = (float)($_POST['tva'] ?? 0);
 $remise       = (float)($_POST['remise'] ?? 0);
 $commentaires = $_POST['commentaires'] ?? '';
+$acompte      = isset($_POST['acompte']) ? 40 : 0;
 $companyKey   = $_POST['company_key'] ?? null;
 
 /**
@@ -141,6 +142,20 @@ $pdf->SetFont('Arial','B',10);
 $pdf->Cell(0,6,"Total HT : ".number_format($htRemise,2,',',' ')." XPF",0,1);
 $pdf->Cell(0,6,"TVA : ".number_format($montantTVA,2,',',' ')." XPF",0,1);
 $pdf->Cell(0,6,"Total TTC : ".number_format($totalTTC,2,',',' ')." XPF",0,1);
+
+// Affiche les conditions de facturation SEULEMENT si acompte est activé
+if ($acompte > 0) {
+    $pdf->Ln(8);
+    $pdf->SetFont('Arial','B',10);
+    $pdf->Cell(0,6,'Facturation',0,1);
+    
+    $pdf->SetFont('Arial','',10);
+    $pdf->MultiCell(
+        0,
+        6,
+        $acompte . ' % à la commande, le solde à la livraison.'
+    );
+}
 
 /* Sortie */
 $pdf->Output('I','preview_devis.pdf');

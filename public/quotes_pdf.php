@@ -265,15 +265,20 @@ $pdf->Cell(
     1
 );
 $pdf->Ln(8);
-$pdf->SetFont('Arial','B',10);
-$pdf->Cell(0,6,pdf_txt('Facturation'),0,1);
 
-$pdf->SetFont('Arial','',10);
-$pdf->MultiCell(
-    0,
-    6,
-    pdf_txt('40 % à la commande, le solde à la livraison.')
-);
+// Affiche les conditions de facturation SEULEMENT si acompte est activé
+$acompte = (int)($quote['acompte_pourcent'] ?? 0);
+if ($acompte > 0) {
+    $pdf->SetFont('Arial','B',10);
+    $pdf->Cell(0,6,pdf_txt('Facturation'),0,1);
+
+    $pdf->SetFont('Arial','',10);
+    $pdf->MultiCell(
+        0,
+        6,
+        pdf_txt($acompte . ' % à la commande, le solde à la livraison.')
+    );
+}
 
 
 
